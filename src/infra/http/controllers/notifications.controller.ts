@@ -4,12 +4,14 @@ import { NotificationViewModel } from '../view-models/notification';
 import { SendNotification } from '@application/use-cases/send-notification';
 import { CancelNotification } from '@application/use-cases/cancel-notification';
 import { ReadNotification } from '@application/use-cases/read-notification';
+import { UnreadNotification } from '@application/use-cases/unread-notification';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(
     private sendNotification: SendNotification,
     private readNotification: ReadNotification,
+    private unreadNotification: UnreadNotification,
     private cancelNotification: CancelNotification,
   ) {}
 
@@ -39,7 +41,12 @@ export class NotificationsController {
     });
   }
 
-  async unread() {}
+  @Patch(':id/unread')
+  async unread(@Param('id') id: string) {
+    await this.unreadNotification.execute({
+      notificationId: id,
+    });
+  }
 
   @Patch(':id/cancel')
   async cancel(@Param('id') id: string) {
